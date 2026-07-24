@@ -1,0 +1,492 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── SAAS SUBSCRIPTION PLAN ──────────────────────────────────────────────────
+model SubscriptionPlan {
+  id            String    @id @default(cuid())
+  name          String    @unique
+  slug          String    @unique
+  description   String?
+  priceMonthly  Float     @default(0)
+  priceYearly   Float     @default(0)
+  maxProperties Int       @default(10)
+  maxStaff      Int       @default(3)
+  maxUnits      Int       @default(50)
+  features      Json      @default("[]")
+  isPopular     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  companies     Company[]
+
+  @@map("subscription_plans")
+}
+
+// ─── COMPANY (TENANT) ────────────────────────────────────────────────────────
+model Company {
+  id                 String            @id @default(cuid())
+  name               String
+  slug               String            @unique
+  logo               String?
+  domain             String?           @unique
+  phone              String?
+  email              String?
+  address            String?
+  taxId              String?
+  status             String            @default("Active")
+  subscriptionStatus String            @default("Active")
+  trialEndsAt        DateTime?
+  subscriptionEndsAt DateTime?
+  
+  planId             String?
+  plan               SubscriptionPlan? @relation(fields: [planId], references: [id])
+  
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  // Multi-tenant relations
+  users              User[]
+  properties         Property[]
+  units              Unit[]
+  contracts          Contract[]
+  payments           Payment[]
+  expenses           Expense[]
+  maintenances       Maintenance[]
+  bookings           Booking[]
+  inquiries          Inquiry[]
+  payrolls           Payroll[]
+  roles              Role[]
+  settings           Setting[]
+  notifications      Notification[]
+
+  @@map("companies")
+}
+
+// ─── USER ───────────────────────────────────────────────────────────────────
+model User {
+  id             String   @id @default(cuid())
+  uniqueId       String?  @unique
+  name           String
+  email          String   @unique
+  password       String?
+  googleId       String?
+  avatar         String?
+  role           String   @default("customer") // superadmin, companyadmin, manager, agent, customer, tenant, staff
+  phone          String?
+  commissionType String?  @default("Percentage")
+  commissionValue Float   @default(0)
+  experience     Float    @default(0)
+  status         String   @default("Active")
+  specialization String[] @default([])
+  companyName    String?
+  taxId          String?
+  designation    String?
+  basicSalary    Float    @default(0)
+  address        String?
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  // SaaS Tenant Relation
+  companyId      String?
+  company        Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  // Self-referential: who created this user
+  createdById    String?
+  createdBy      User?    @relation("CreatedByUser", fields: [createdById], references: [id])
+  createdUsers   User[]   @relation("CreatedByUser")
+
+  // Owner reference (for customers)
+  ownerId        String?
+  owner          User?    @relation("OwnerUser", fields: [ownerId], references: [id])
+  ownedUsers     User[]   @relation("OwnerUser")
+
+  // Assigned agents (many-to-many self)
+  assignedAgents  User[]  @relation("AssignedAgents")
+  assignedTo      User[]  @relation("AssignedAgents")
+
+  // Relations
+  properties      Property[]
+  units           Unit[]
+  maintenances    Maintenance[]
+  bookings        Booking[]
+  inquiries       Inquiry[]    @relation("InquiryOwner")
+  assignedInquiries Inquiry[]  @relation("InquiryAssignedTo")
+  contracts       Contract[]
+  payments        Payment[]
+  expenses        Expense[]
+  payrolls        Payroll[]    @relation("PayrollCreatedBy")
+  payrollStaff    Payroll[]    @relation("PayrollStaff")
+  setting         Setting?
+  notifications   Notification[]
+
+  @@map("users")
+}
+
+// ─── PROPERTY ────────────────────────────────────────────────────────────────
+model Property {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  propertyType String
+  purpose      String
+  price        Float
+  status       String   @default("Available")
+  areaSize     Float
+  areaUnit     String   @default("Sq M")
+  bedrooms     Int?
+  bathrooms    Int?
+  parkingSpots Int?
+  propertyAge  Int?
+  amenities    String[] @default([])
+  address      String
+  city         String
+  state        String?
+  zipCode      String?
+  country      String?
+  lat          Float?
+  lng          Float?
+  images       String[] @default([])
+  agent        String?
+  owner        String?
+  isFeatured   Boolean  @default(false)
+  isHot        Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+
+  companyId    String?
+  company      Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  units        Unit[]
+  contracts    Contract[]
+  maintenances Maintenance[]
+  bookings     Booking[]
+  expenses     Expense[]
+  payments     Payment[]
+
+  @@map("properties")
+}
+
+// ─── UNIT ────────────────────────────────────────────────────────────────────
+model Unit {
+  id         String   @id @default(cuid())
+  unitNumber String
+  block      String?
+  floor      String?
+  unitType   String?
+  status     String   @default("Available")
+  price      Float?
+  areaSize   Float
+  areaUnit   String   @default("sqft")
+  bedrooms   Int?
+  bathrooms  Int?
+  windows    Int?
+  createdAt  DateTime @default(now())
+
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+
+  companyId  String?
+  company    Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  contracts    Contract[]
+  maintenances Maintenance[]
+  bookings     Booking[]
+  payments     Payment[]
+  expenses     Expense[]
+
+  @@map("units")
+}
+
+// ─── CONTRACT ────────────────────────────────────────────────────────────────
+model Contract {
+  id             String   @id @default(cuid())
+  contractNumber String   @unique @default(cuid())
+  contractType   String   @default("Rental Agreement")
+  clientName     String
+  status         String   @default("Draft")
+  startDate      DateTime
+  endDate        DateTime?
+  notes          String?
+  rentAmount     Float
+  billingCycle   String   @default("Monthly")
+  securityDeposit Float   @default(0)
+  lateFee        Float    @default(0)
+  attachmentUrl  String?
+  createdAt      DateTime @default(now())
+
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  unitId     String?
+  unit       Unit?    @relation(fields: [unitId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+
+  companyId  String?
+  company    Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  payments   Payment[]
+
+  @@map("contracts")
+}
+
+// ─── PAYMENT ─────────────────────────────────────────────────────────────────
+model Payment {
+  id               String   @id @default(cuid())
+  client           String
+  paymentType      String   @default("Monthly Rent")
+  paymentMethod    String   @default("Cash")
+  billingMonth     String
+  billingYear      Int
+  baseAmount       Float
+  receivedAmount   Float
+  balance          Float    @default(0)
+  status           String   @default("Paid")
+  internalNotes    String?
+  verificationCode String?  @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  propertyId String
+  property   Property  @relation(fields: [propertyId], references: [id])
+  unitId     String?
+  unit       Unit?     @relation(fields: [unitId], references: [id])
+  contractId String?
+  contract   Contract? @relation(fields: [contractId], references: [id])
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+
+  companyId  String?
+  company    Company?  @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@map("payments")
+}
+
+// ─── EXPENSE ─────────────────────────────────────────────────────────────────
+model Expense {
+  id              String   @id @default(cuid())
+  title           String
+  category        String
+  amount          Float
+  date            DateTime @default(now())
+  paymentMethod   String   @default("Cash")
+  notes           String?
+  status          String   @default("Paid")
+  referenceNumber String?  @unique @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  propertyId  String?
+  property    Property? @relation(fields: [propertyId], references: [id])
+  unitId      String?
+  unit        Unit?    @relation(fields: [unitId], references: [id])
+
+  companyId   String?
+  company     Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@map("expenses")
+}
+
+// ─── MAINTENANCE ─────────────────────────────────────────────────────────────
+model Maintenance {
+  id            String   @id @default(cuid())
+  requestedBy   String
+  email         String
+  phone         String
+  title         String
+  type          String
+  description   String?
+  source        String   @default("Website")
+  priority      String   @default("Medium")
+  status        String   @default("Pending")
+  estimatedCost Float    @default(0)
+  scheduledDate DateTime?
+  createdAt     DateTime @default(now())
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  unitId     String
+  unit       Unit     @relation(fields: [unitId], references: [id])
+
+  companyId  String?
+  company    Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@map("maintenances")
+}
+
+// ─── BOOKING ─────────────────────────────────────────────────────────────────
+model Booking {
+  id              String   @id @default(cuid())
+  customerName    String
+  email           String?
+  phone           String
+  agent           String?
+  status          String   @default("Pending Request")
+  totalPrice      Float    @default(0)
+  tokenAmount     Float    @default(0)
+  advancePayment  Float    @default(0)
+  remainingAmount Float    @default(0)
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  unitId     String?
+  unit       Unit?    @relation(fields: [unitId], references: [id])
+
+  companyId  String?
+  company    Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@map("bookings")
+}
+
+// ─── INQUIRY ─────────────────────────────────────────────────────────────────
+model Inquiry {
+  id            String   @id @default(cuid())
+  name          String
+  phone         String
+  propertyType  String?
+  purpose       String?
+  budget        String?
+  city          String?
+  status        String   @default("New")
+  priority      String   @default("Medium")
+  remarks       String?  @default("")
+  nextFollowUp  DateTime?
+  statusHistory Json?    @default("[]")
+  createdAt     DateTime @default(now())
+
+  userId       String
+  user         User    @relation("InquiryOwner", fields: [userId], references: [id])
+  assignedToId String?
+  assignedTo   User?   @relation("InquiryAssignedTo", fields: [assignedToId], references: [id])
+
+  companyId    String?
+  company      Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@map("inquiries")
+}
+
+// ─── PAYROLL ─────────────────────────────────────────────────────────────────
+model Payroll {
+  id            String    @id @default(cuid())
+  month         String
+  year          Int
+  baseSalary    Float
+  bonus         Float     @default(0)
+  deductions    Float     @default(0)
+  totalAmount   Float
+  status        String    @default("Pending")
+  paymentDate   DateTime?
+  paymentMethod String    @default("Bank Transfer")
+  transactionId String?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  staffId     String
+  staff       User   @relation("PayrollStaff", fields: [staffId], references: [id])
+  createdById String
+  createdBy   User   @relation("PayrollCreatedBy", fields: [createdById], references: [id])
+
+  companyId   String?
+  company     Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@map("payrolls")
+}
+
+// ─── ROLE ────────────────────────────────────────────────────────────────────
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  permissions Json     @default("[]")
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  companyId   String?
+  company     Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@map("roles")
+}
+
+// ─── SETTING ─────────────────────────────────────────────────────────────────
+model Setting {
+  id               String   @id @default(cuid())
+  storeName        String   @default("EstateCloud")
+  storeLogo        String?
+  phone            String?  @default("+923000000000")
+  email            String?  @default("admin@estatecloud.com")
+  website          String?  @default("https://www.estatecloud.com")
+  businessHours    String?  @default("Mon-Fri: 9:00 AM - 6:00 PM")
+  address          String?  @default("Lahore, Pakistan")
+  taxId            String?  @default("")
+  currency         String   @default("PKR - Pakistani Rupee")
+  timezone         String   @default("(GMT+05:00) Islamabad, Karachi")
+  taxRate          Float    @default(0)
+  receiptFooter    String?  @default("Thank you for choosing EstateCloud!")
+  termsAndConditions String? @default("")
+  enableSMS        Boolean  @default(false)
+  enableEmail      Boolean  @default(false)
+  enableAIReporting Boolean @default(false)
+  accentColor      String   @default("#2563eb")
+  smtpHost         String?  @default("")
+  smtpPort         String?  @default("587")
+  smtpUser         String?  @default("")
+  smtpPass         String?  @default("")
+  smtpFrom         String?  @default("")
+  updatedAt        DateTime @updatedAt
+
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@map("settings")
+}
+
+// ─── NOTIFICATION ────────────────────────────────────────────────────────────
+model Notification {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  type        String   @default("system")
+  status      String   @default("unread")
+  link        String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@map("notifications")
+}
+
+// ─── TRASH ───────────────────────────────────────────────────────────────────
+model Trash {
+  id             String   @id @default(cuid())
+  collectionName String
+  document       Json
+  deletedAt      DateTime @default(now())
+
+  @@map("trash")
+}

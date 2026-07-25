@@ -4,8 +4,7 @@ import { useAuth } from "@/context/AuthContext"
 import { cn } from "@/lib/utils"
 import { useGoogleLogin } from '@react-oauth/google'
 import { Button } from "@/components/ui/button"
-import Logo from "@/assets/Logo_old.png"
-import LogoDark from "@/assets/Hassan Associates Logo.png"
+import Logo from "@/assets/estatecloud.png"
 import { toast } from "sonner"
 import {
   Card,
@@ -71,8 +70,7 @@ export function SignupForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col items-center gap-2">
         <Link to="/" className="flex items-center gap-2 self-center font-medium">
-          <img src={Logo} alt="Logo" className="h-10 w-auto dark:hidden" />
-          <img src={LogoDark} alt="Logo" className="hidden h-10 w-auto dark:block" />
+          <img src={Logo} alt="EstateCloud Logo" className="h-16 w-auto object-contain" />
         </Link>
       </div>
       <Card>

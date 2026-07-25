@@ -4,8 +4,7 @@ import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { useAuth } from "@/context/AuthContext"
 import { useSettings } from "@/context/SettingsContext"
-import Logo from "@/assets/Logo_old.png"
-import LogoDark from "@/assets/Hassan Associates Logo.png"
+import SidebarLogo from "@/assets/g12.png"
 import {
   Sidebar,
   SidebarContent,
@@ -209,10 +208,7 @@ export function AppSidebar({ ...props }) {
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <Link to="/" className="flex items-center gap-2 px-3 py-2 font-black text-xl tracking-tight text-primary">
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-white font-black text-lg shadow-sm">
-            E
-          </div>
-          <span className="bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">EstateCloud</span>
+          <img src={SidebarLogo} alt="EstateCloud Logo" className="h-9 w-auto object-contain shrink-0" />
         </Link>
       </SidebarHeader>
       <SidebarContent>

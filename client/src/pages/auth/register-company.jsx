@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom"
 import axios from "axios"
 import { toast } from "sonner"
 import { Building2, User, Mail, Lock, Phone, MapPin, CheckCircle2, ArrowRight, Sparkles } from "lucide-react"
+import Logo from "@/assets/estatecloud.png"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -83,9 +84,9 @@ export default function RegisterCompanyPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-xl text-center mb-6">
-        <div className="inline-flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full text-primary font-semibold text-sm mb-2">
-          <Sparkles className="h-4 w-4" /> EstateCloud SaaS Platform
-        </div>
+        <Link to="/" className="inline-block mb-3">
+          <img src={Logo} alt="EstateCloud Logo" className="h-19 w-auto mx-auto object-contain" />
+        </Link>
         <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Register Your Real Estate Agency</h2>
         <p className="mt-2 text-sm text-slate-600">Start your 14-day free trial. Manage properties, units, staff, & financials in one place.</p>
       </div>

@@ -51,6 +51,7 @@ import DHALahorePage from "@/website/DHALahorePage"
 import LahoreMeadowsCityPage from "@/website/LahoreMeadowsCityPage"
 import ContactPage from "@/website/ContactPage"
 import AboutPage from "@/website/AboutPage"
+import AnimatedLogoDemo from "@/components/ui/animated-logo-demo"
 
 export default function App() {
   return (
@@ -61,6 +62,7 @@ export default function App() {
             <BrowserRouter>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/logo-demo" element={<AnimatedLogoDemo />} />
               <Route path="/services/construction-development" element={<ConstructionPage />} />
               <Route path="/services/real-estate-consultant" element={<RealEstatePage />} />
               <Route path="/services/buying-selling" element={<BuyingSellingPage />} />

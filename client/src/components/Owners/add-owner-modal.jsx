@@ -99,8 +99,8 @@ export function AddOwnerModal({ open, onOpenChange, onSuccess, initialData }) {
                 <Input id="name" value={formData.name} onChange={handleInputChange} placeholder="Owner's full name" required />
               </div>
               <div className="grid gap-3">
-                <Label htmlFor="email">Email address*</Label>
-                <Input id="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="owner@example.com" required />
+                <Label htmlFor="email">Email address</Label>
+                <Input id="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="owner@example.com" />
               </div>
             </div>
 

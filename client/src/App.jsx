@@ -40,17 +40,6 @@ import ProtectedRoute from "@/components/protected-route"
 import { TooltipProvider } from "@/components/ui/tooltip"
 
 import HomePage from "@/website/HomePage"
-import ConstructionPage from "@/website/ConstructionPage"
-import RealEstatePage from "@/website/RealEstatePage"
-import BuyingSellingPage from "@/website/BuyingSellingPage"
-import ContractorPage from "@/website/ContractorPage"
-import ParkViewCityPage from "@/website/ParkViewCityPage"
-import BahriaTownPage from "@/website/BahriaTownPage"
-import AlNoorOrchardPage from "@/website/AlNoorOrchardPage"
-import DHALahorePage from "@/website/DHALahorePage"
-import LahoreMeadowsCityPage from "@/website/LahoreMeadowsCityPage"
-import ContactPage from "@/website/ContactPage"
-import AboutPage from "@/website/AboutPage"
 import AnimatedLogoDemo from "@/components/ui/animated-logo-demo"
 
 export default function App() {
@@ -63,20 +52,13 @@ export default function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/logo-demo" element={<AnimatedLogoDemo />} />
-              <Route path="/services/construction-development" element={<ConstructionPage />} />
-              <Route path="/services/real-estate-consultant" element={<RealEstatePage />} />
-              <Route path="/services/buying-selling" element={<BuyingSellingPage />} />
-              <Route path="/services/contractor" element={<ContractorPage />} />
-              <Route path="/societies/park-view-city" element={<ParkViewCityPage />} />
-              <Route path="/societies/bahria-town" element={<BahriaTownPage />} />
-              <Route path="/societies/al-noor-orchard" element={<AlNoorOrchardPage />} />
-              <Route path="/societies/dha-lahore" element={<DHALahorePage />} />
-              <Route path="/societies/lahore-meadows-city" element={<LahoreMeadowsCityPage />} />
+              <Route path="/services/*" element={<HomePage />} />
+              <Route path="/societies/*" element={<HomePage />} />
+              <Route path="/contact" element={<HomePage />} />
+              <Route path="/about" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/register-company" element={<RegisterCompanyPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/about" element={<AboutPage />} />
               
               <Route element={<ProtectedRoute />}>
                 <Route element={<DashboardLayout />}>

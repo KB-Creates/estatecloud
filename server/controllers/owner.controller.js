@@ -40,9 +40,15 @@ export const createOwner = async (req, res) => {
   try {
     const { name, email, password, phone, companyName, taxId, status } = req.body;
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User with this email already exists' });
+    let finalEmail = email ? email.trim() : "";
+    if (finalEmail) {
+      const existingUser = await prisma.user.findUnique({ where: { email: finalEmail } });
+      if (existingUser) {
+        return res.status(400).json({ message: 'User with this email already exists' });
+      }
+    } else {
+      const randomId = Math.floor(100000 + Math.random() * 900000);
+      finalEmail = `owner_${Date.now()}_${randomId}@placeholder.local`;
     }
 
     const uniqueId = await generateOwnerId(name);
@@ -54,7 +60,7 @@ export const createOwner = async (req, res) => {
       data: {
         uniqueId,
         name,
-        email,
+        email: finalEmail,
         password: hashedPassword,
         role: 'owner',
         phone: phone || null,

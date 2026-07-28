@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import g12Logo from "@/assets/g12.png"
-
+import g1Logo from "/g1.svg"
+ 
 export default function Footer() {
   return (
     <footer className="w-full bg-white border-t border-slate-200/80 py-6 text-slate-500 text-xs sm:text-sm">
@@ -9,7 +9,7 @@ export default function Footer() {
         {/* Left: Logo & Copyright */}
         <div className="flex items-center gap-3">
           <Link to="/">
-            <img src={g12Logo} alt="EstateCloud Logo" className="h-8 w-auto object-contain" />
+            <img src={g1Logo} alt="EstateCloud Logo" className="h-8 w-auto object-contain" />
           </Link>
           <span className="text-slate-400">|</span>
           <p className="text-slate-500">
@@ -19,9 +19,9 @@ export default function Footer() {
 
         {/* Right: Simple Links */}
         <div className="flex items-center gap-6 text-slate-600 font-medium text-xs sm:text-sm">
-          <Link to="/" className="hover:text-indigo-600 transition-colors">Home</Link>
-          <Link to="/about" className="hover:text-indigo-600 transition-colors">About Us</Link>
-          <Link to="/contact" className="hover:text-indigo-600 transition-colors">Contact</Link>
+          <Link to="/" className="hover:text-[#029474] transition-colors">Home</Link>
+          <Link to="/about" className="hover:text-[#029474] transition-colors">About Us</Link>
+          <Link to="/contact" className="hover:text-[#029474] transition-colors">Contact</Link>
         </div>
       </div>
     </footer>

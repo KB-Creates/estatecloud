@@ -4,7 +4,7 @@ import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { useAuth } from "@/context/AuthContext"
 import { useSettings } from "@/context/SettingsContext"
-import SidebarLogo from "@/assets/g12.png"
+import SidebarLogo from "/g1.svg"
 import {
   Sidebar,
   SidebarContent,

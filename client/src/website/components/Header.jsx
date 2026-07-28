@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/context/AuthContext"
-import g12Logo from "@/assets/g12.png"
+import g1Logo from "/g1.svg"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -114,9 +114,9 @@ export default function Header() {
         {/* Left: Logo Section */}
         <Link to="/" className="flex items-center gap-2 group">
           <img
-            src={g12Logo}
+            src={g1Logo}
             alt="EstateCloud Logo"
-            className="h-10 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            className="h-5 sm:h-6 w-auto object-contain"
           />
         </Link>
 
@@ -125,8 +125,8 @@ export default function Header() {
           <Link
             to="/"
             className={cn(
-              "text-sm font-medium transition-colors hover:text-indigo-600 flex items-center gap-1 py-1",
-              location.pathname === "/" ? "text-indigo-600 font-semibold" : "text-slate-700"
+              "text-sm font-medium transition-colors hover:text-[#029474] flex items-center gap-1 py-1",
+              location.pathname === "/" ? "text-[#029474] font-semibold" : "text-slate-700"
             )}
           >
             Home
@@ -136,8 +136,8 @@ export default function Header() {
           <Link
             to="/about"
             className={cn(
-              "text-sm font-medium transition-colors hover:text-indigo-600 py-1",
-              location.pathname === "/about" ? "text-indigo-600 font-semibold" : "text-slate-700"
+              "text-sm font-medium transition-colors hover:text-[#029474] py-1",
+              location.pathname === "/about" ? "text-[#029474] font-semibold" : "text-slate-700"
             )}
           >
             About Us
@@ -148,8 +148,8 @@ export default function Header() {
             <DropdownMenuTrigger asChild>
               <button
                 className={cn(
-                  "flex items-center gap-1 text-sm font-medium outline-none cursor-pointer transition-colors hover:text-indigo-600 py-1",
-                  location.pathname.startsWith("/services") ? "text-indigo-600 font-semibold" : "text-slate-700"
+                  "flex items-center gap-1 text-sm font-medium outline-none cursor-pointer transition-colors hover:text-[#029474] py-1",
+                  location.pathname.startsWith("/services") ? "text-[#029474] font-semibold" : "text-slate-700"
                 )}
               >
                 Services
@@ -160,7 +160,7 @@ export default function Header() {
               {services.map((item) => {
                 const link = getServiceLink(item);
                 return (
-                  <DropdownMenuItem key={item} asChild className="rounded-lg cursor-pointer text-slate-700 focus:bg-indigo-50 focus:text-indigo-600">
+                  <DropdownMenuItem key={item} asChild className="rounded-lg cursor-pointer text-slate-700 focus:bg-[#029474]/10 focus:text-[#029474]">
                     <Link to={link} className="w-full px-3 py-2 text-sm font-medium">
                       {item}
                     </Link>
@@ -175,8 +175,8 @@ export default function Header() {
             <DropdownMenuTrigger asChild>
               <button
                 className={cn(
-                  "flex items-center gap-1 text-sm font-medium outline-none cursor-pointer transition-colors hover:text-indigo-600 py-1",
-                  location.pathname.startsWith("/societies") ? "text-indigo-600 font-semibold" : "text-slate-700"
+                  "flex items-center gap-1 text-sm font-medium outline-none cursor-pointer transition-colors hover:text-[#029474] py-1",
+                  location.pathname.startsWith("/societies") ? "text-[#029474] font-semibold" : "text-slate-700"
                 )}
               >
                 Societies
@@ -187,7 +187,7 @@ export default function Header() {
               {societies.map((item) => {
                 const link = getSocietyLink(item);
                 return (
-                  <DropdownMenuItem key={item} asChild className="rounded-lg cursor-pointer text-slate-700 focus:bg-indigo-50 focus:text-indigo-600">
+                  <DropdownMenuItem key={item} asChild className="rounded-lg cursor-pointer text-slate-700 focus:bg-[#029474]/10 focus:text-[#029474]">
                     <Link to={link} className="w-full px-3 py-2 text-sm font-medium">
                       {item}
                     </Link>
@@ -200,8 +200,8 @@ export default function Header() {
           <Link
             to="/contact"
             className={cn(
-              "text-sm font-medium transition-colors hover:text-indigo-600 py-1",
-              location.pathname === "/contact" ? "text-indigo-600 font-semibold" : "text-slate-700"
+              "text-sm font-medium transition-colors hover:text-[#029474] py-1",
+              location.pathname === "/contact" ? "text-[#029474] font-semibold" : "text-slate-700"
             )}
           >
             Contact
@@ -211,18 +211,18 @@ export default function Header() {
         {/* Right: Actions */}
         <div className="hidden lg:flex items-center gap-5">
           {user ? (
-            <Button asChild variant="ghost" className="text-slate-700 hover:text-indigo-600 font-medium">
+            <Button asChild variant="ghost" className="text-slate-700 hover:text-[#029474] font-medium">
               <Link to="/dashboard">Dashboard</Link>
             </Button>
           ) : (
-            <Button asChild variant="ghost" className="text-slate-700 hover:text-indigo-600 font-medium">
+            <Button asChild variant="ghost" className="text-slate-700 hover:text-[#029474] font-medium">
               <Link to="/login">Log In</Link>
             </Button>
           )}
 
           <Button
             onClick={() => setIsQuoteOpen(true)}
-            className="rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold px-6 py-2.5 h-10 text-sm shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer"
+            className="rounded-xl bg-[#029474] hover:bg-[#027a60] text-white font-semibold px-6 py-2.5 h-10 text-sm shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer"
           >
             Sign Up (Free)
           </Button>
@@ -242,25 +242,25 @@ export default function Header() {
               {/* Mobile Header */}
               <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                 <Link to="/" onClick={() => setMobileMenuOpen(false)}>
-                  <img src={g12Logo} alt="EstateCloud Logo" className="h-10 w-auto object-contain" />
+                  <img src={g1Logo} alt="EstateCloud Logo" className="h-10 w-auto object-contain" />
                 </Link>
               </div>
 
               {/* Mobile Navigation Links */}
               <div className="flex flex-col gap-5 py-6 overflow-y-auto max-h-[calc(100vh-200px)]">
-                <Link to="/" className="text-base font-medium text-slate-800 hover:text-indigo-600" onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/" className="text-base font-medium text-slate-800 hover:text-[#029474]" onClick={() => setMobileMenuOpen(false)}>
                   Home
                 </Link>
-                <Link to="/about" className="text-base font-medium text-slate-800 hover:text-indigo-600" onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/about" className="text-base font-medium text-slate-800 hover:text-[#029474]" onClick={() => setMobileMenuOpen(false)}>
                   About Us
                 </Link>
 
                 {/* Services Accordion List */}
                 <div className="flex flex-col gap-2">
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Services</span>
-                  <div className="pl-3 flex flex-col gap-2 border-l-2 border-indigo-100">
+                  <div className="pl-3 flex flex-col gap-2 border-l-2 border-[#029474]/20">
                     {services.map((item) => (
-                      <Link key={item} to={getServiceLink(item)} className="text-sm text-slate-600 hover:text-indigo-600" onClick={() => setMobileMenuOpen(false)}>
+                      <Link key={item} to={getServiceLink(item)} className="text-sm text-slate-600 hover:text-[#029474]" onClick={() => setMobileMenuOpen(false)}>
                         {item}
                       </Link>
                     ))}
@@ -270,16 +270,16 @@ export default function Header() {
                 {/* Societies Accordion List */}
                 <div className="flex flex-col gap-2">
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Societies</span>
-                  <div className="pl-3 flex flex-col gap-2 border-l-2 border-indigo-100">
+                  <div className="pl-3 flex flex-col gap-2 border-l-2 border-[#029474]/20">
                     {societies.map((item) => (
-                      <Link key={item} to={getSocietyLink(item)} className="text-sm text-slate-600 hover:text-indigo-600" onClick={() => setMobileMenuOpen(false)}>
+                      <Link key={item} to={getSocietyLink(item)} className="text-sm text-slate-600 hover:text-[#029474]" onClick={() => setMobileMenuOpen(false)}>
                         {item}
                       </Link>
                     ))}
                   </div>
                 </div>
 
-                <Link to="/contact" className="text-base font-medium text-slate-800 hover:text-indigo-600" onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/contact" className="text-base font-medium text-slate-800 hover:text-[#029474]" onClick={() => setMobileMenuOpen(false)}>
                   Contact
                 </Link>
               </div>
@@ -300,7 +300,7 @@ export default function Header() {
                     setMobileMenuOpen(false)
                     setTimeout(() => setIsQuoteOpen(true), 200)
                   }}
-                  className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold rounded-xl"
+                  className="w-full bg-[#029474] hover:bg-[#027a60] text-white font-semibold rounded-xl"
                 >
                   Sign Up (Free)
                 </Button>
@@ -330,7 +330,7 @@ export default function Header() {
                   value={quoteData.firstName}
                   onChange={handleQuoteChange}
                   required
-                  className="w-full rounded-lg border-slate-200 focus-visible:ring-indigo-600"
+                  className="w-full rounded-lg border-slate-200 focus-visible:ring-[#029474]"
                 />
               </div>
               <div className="space-y-1.5">
@@ -341,7 +341,7 @@ export default function Header() {
                   placeholder="Last Name"
                   value={quoteData.lastName}
                   onChange={handleQuoteChange}
-                  className="w-full rounded-lg border-slate-200 focus-visible:ring-indigo-600"
+                  className="w-full rounded-lg border-slate-200 focus-visible:ring-[#029474]"
                 />
               </div>
             </div>
@@ -355,7 +355,7 @@ export default function Header() {
                 value={quoteData.email}
                 onChange={handleQuoteChange}
                 required
-                className="w-full rounded-lg border-slate-200 focus-visible:ring-indigo-600"
+                className="w-full rounded-lg border-slate-200 focus-visible:ring-[#029474]"
               />
             </div>
             <div className="space-y-1.5">
@@ -367,7 +367,7 @@ export default function Header() {
                 value={quoteData.contact}
                 onChange={handleQuoteChange}
                 required
-                className="w-full rounded-lg border-slate-200 focus-visible:ring-indigo-600"
+                className="w-full rounded-lg border-slate-200 focus-visible:ring-[#029474]"
               />
             </div>
             <div className="space-y-1.5">
@@ -379,13 +379,13 @@ export default function Header() {
                 rows={3}
                 value={quoteData.message}
                 onChange={handleQuoteChange}
-                className="w-full rounded-lg border-slate-200 focus-visible:ring-indigo-600 resize-none"
+                className="w-full rounded-lg border-slate-200 focus-visible:ring-[#029474] resize-none"
               />
             </div>
             <Button
               type="submit"
               disabled={quoteLoading}
-              className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold h-11 rounded-xl shadow-md transition-all cursor-pointer"
+              className="w-full bg-[#029474] hover:bg-[#027a60] text-white font-semibold h-11 rounded-xl shadow-md transition-all cursor-pointer"
             >
               {quoteLoading ? (
                 <>

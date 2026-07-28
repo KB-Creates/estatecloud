@@ -1,7 +1,7 @@
-import React from "react"
+import React, { useRef } from "react"
 import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
-import { motion } from "framer-motion"
+import { motion, useScroll, useTransform } from "framer-motion"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,43 @@ import {
   Headphones,
   LayoutGrid,
 } from "lucide-react"
+import PillBadge from "@/components/ui/pill-badge"
+
+function HeroScrollPreview() {
+  const containerRef = useRef(null)
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "center center"],
+  })
+
+  // Start with 25deg tilt back in 3D perspective, unskew to 0deg on scroll
+  const rotateX = useTransform(scrollYProgress, [0, 1], [25, 0])
+  const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1])
+
+  return (
+    <div
+      ref={containerRef}
+      className="w-full max-w-6xl mx-auto px-4 pt-4 pb-24 relative z-20"
+      style={{ perspective: "1200px" }}
+    >
+      <motion.div
+        style={{
+          rotateX,
+          scale,
+          transformStyle: "preserve-3d",
+        }}
+        className="rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white/70 backdrop-blur-xl p-2 sm:p-4 shadow-2xl shadow-slate-300/40 transition-shadow duration-300"
+      >
+        <img
+          src="/dashboard-preview.png"
+          alt="EstateCloud Dashboard Preview"
+          className="w-full h-auto rounded-xl sm:rounded-2xl border border-slate-200/80 shadow-md object-cover"
+        />
+      </motion.div>
+    </div>
+  )
+}
 
 export default function HomePage() {
   return (
@@ -28,100 +65,68 @@ export default function HomePage() {
         />
       </Helmet>
 
-      {/* Top Background Perspective Grid */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[650px] pointer-events-none z-0 overflow-hidden opacity-90">
-        <img
-          src="/templete images/grid-top-scaled.webp"
-          alt="Background Grid"
-          className="w-full h-full object-cover object-top"
-        />
-        {/* Soft radial fade out */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/50 to-slate-50" />
-      </div>
+      {/* Full top background image - unclipped */}
+      <img
+        src="/templete images/grid-top-scaled.webp"
+        alt="Background Grid"
+        className="absolute top-0 left-0 w-full h-auto object-contain pointer-events-none z-0"
+      />
 
       {/* Header */}
       <Header />
 
       {/* Main Content / Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center relative z-10 px-4 pt-36 pb-28 max-w-6xl mx-auto w-full text-center">
+      <main className="flex-1 flex flex-col items-center justify-center relative z-10 px-4 pt-36 pb-8 max-w-6xl mx-auto w-full text-center">
         
-        {/* Floating Icon Badges positioned symmetrically around the Hero area */}
-        {/* 1. Top Left: Analytics / Chart */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: [0, -10, 0] }}
-          transition={{
-            opacity: { duration: 0.6 },
-            y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-          }}
-          className="hidden md:flex absolute left-4 lg:left-12 top-28 items-center justify-center p-3 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-xl shadow-slate-200/50 hover:scale-105 transition-transform cursor-pointer"
-        >
-          <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
-            <BarChart3 className="w-5 h-5" />
-          </div>
-        </motion.div>
+        {/* Static 4 Icons positioned exactly like reference image (No animations) */}
+        {/* 1. Top Left Icon (Chart): Next to top pill badge */}
+        <div className="hidden md:block absolute top-28 left-[20%] lg:left-[28%] pointer-events-none z-10">
+          <img
+            src="/hero-icons/icon-1.png"
+            alt="Hero Icon 1"
+            className="w-12 h-12 lg:w-14 lg:h-14 object-contain"
+          />
+        </div>
 
-        {/* 2. Mid Left: Property Pin */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: [0, 10, 0] }}
-          transition={{
-            opacity: { duration: 0.6, delay: 0.2 },
-            y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-          }}
-          className="hidden md:flex absolute left-8 lg:left-24 top-64 items-center justify-center p-3 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-xl shadow-slate-200/50 hover:scale-105 transition-transform cursor-pointer"
-        >
-          <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500">
-            <MapPin className="w-5 h-5 fill-rose-500/20" />
-          </div>
-        </motion.div>
+        {/* 2. Top Right Icon (Rocket): Next to top pill badge */}
+        <div className="hidden md:block absolute top-28 right-[20%] lg:right-[28%] pointer-events-none z-10">
+          <img
+            src="/hero-icons/icon-3.png"
+            alt="Hero Icon 3"
+            className="w-12 h-12 lg:w-14 lg:h-14 object-contain"
+          />
+        </div>
 
-        {/* 3. Top Right: Growth / Rocket */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: [0, -12, 0] }}
-          transition={{
-            opacity: { duration: 0.6, delay: 0.3 },
-            y: { duration: 4.5, repeat: Infinity, ease: "easeInOut" },
-          }}
-          className="hidden md:flex absolute right-4 lg:right-12 top-28 items-center justify-center p-3 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-xl shadow-slate-200/50 hover:scale-105 transition-transform cursor-pointer"
-        >
-          <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500">
-            <Rocket className="w-5 h-5" />
-          </div>
-        </motion.div>
+        {/* 3. Mid Left Icon (Pushpin): On the far left of H1 title */}
+        <div className="hidden md:block absolute top-48 left-[4%] lg:left-[12%] pointer-events-none z-10">
+          <img
+            src="/hero-icons/icon-2.png"
+            alt="Hero Icon 2"
+            className="w-14 h-14 lg:w-16 lg:h-16 object-contain"
+          />
+        </div>
 
-        {/* 4. Mid Right: Verified Success / Check */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: [0, 8, 0] }}
-          transition={{
-            opacity: { duration: 0.6, delay: 0.4 },
-            y: { duration: 5.2, repeat: Infinity, ease: "easeInOut" },
-          }}
-          className="hidden md:flex absolute right-8 lg:right-24 top-64 items-center justify-center p-3 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-xl shadow-slate-200/50 hover:scale-105 transition-transform cursor-pointer"
-        >
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-[#029474]">
-            <CheckCircle2 className="w-5 h-5 stroke-[2.5]" />
-          </div>
-        </motion.div>
+        {/* 4. Mid Right Icon (Green Check): On the far right of H1 title */}
+        <div className="hidden md:block absolute top-52 right-[4%] lg:right-[12%] pointer-events-none z-10">
+          <img
+            src="/hero-icons/icon-4.png"
+            alt="Hero Icon 4"
+            className="w-14 h-14 lg:w-16 lg:h-16 object-contain"
+          />
+        </div>
 
         {/* Central Pill Badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="mb-8"
         >
-          <Link
+          <PillBadge
+            tag="Real Estate"
+            label="Manage Smarter, Together"
             to="/about"
-            className="inline-flex items-center gap-2.5 rounded-full border border-slate-200/90 bg-white/80 backdrop-blur-sm px-3.5 py-1.5 text-xs sm:text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:shadow-md cursor-pointer mb-8 group"
-          >
-            <span className="bg-slate-900 text-white px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wider uppercase">
-              Real Estate
-            </span>
-            <span className="text-slate-600 font-medium">Manage Smarter, Together</span>
-            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
+          />
         </motion.div>
 
         {/* Main Heading */}
@@ -129,7 +134,7 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-[1.1] text-center max-w-4xl"
+          className="text-4xl sm:text-6xl lg:text-7xl/tight text-black font-medium tracking-tight text-center max-w-4xl"
         >
           All-in-One Workspace <br className="hidden sm:inline" />
           for Modern Real Estate
@@ -140,7 +145,7 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-6 text-base sm:text-lg lg:text-xl text-slate-600 max-w-2xl text-center leading-relaxed font-normal"
+          className="mt-6 text-base sm:text-xs lg:text-base font-normal text-slate-600 max-w-2xl text-center leading-relaxed"
         >
           Plan, collaborate, and track properties, contracts, leads, and financials — all in one beautiful, unified cloud workspace.
         </motion.p>
@@ -173,6 +178,9 @@ export default function HomePage() {
           </Button>
         </motion.div>
       </main>
+
+      {/* 3D Scroll Perspective Image Preview */}
+      <HeroScrollPreview />
 
       {/* Floating Side Toolbar on Right */}
       <div className="fixed right-3 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3 bg-white/90 backdrop-blur-md p-2 rounded-2xl border border-slate-200/90 shadow-xl text-slate-600">

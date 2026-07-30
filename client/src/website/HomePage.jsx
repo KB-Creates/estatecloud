@@ -5,6 +5,7 @@ import Hero from "./components/Hero"
 import ClientLogos from "./components/ClientLogos"
 import Features from "./components/Features"
 import Benefits from "./components/Benefits"
+import TrustedTeams from "./components/TrustedTeams"
 import Footer from "./components/Footer"
 
 export default function HomePage() {
@@ -32,6 +33,9 @@ export default function HomePage() {
 
       {/* Benefits Section Component */}
       <Benefits />
+
+      {/* Trusted Teams / Testimonials Section Component */}
+      <TrustedTeams />
 
       {/* Website Footer */}
       <Footer />

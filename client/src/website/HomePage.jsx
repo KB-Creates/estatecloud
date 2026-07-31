@@ -6,6 +6,7 @@ import ClientLogos from "./components/ClientLogos"
 import Features from "./components/Features"
 import Benefits from "./components/Benefits"
 import TrustedTeams from "./components/TrustedTeams"
+import Faq from "./components/Faq"
 import Footer from "./components/Footer"
 
 export default function HomePage() {
@@ -36,6 +37,9 @@ export default function HomePage() {
 
       {/* Trusted Teams / Testimonials Section Component */}
       <TrustedTeams />
+
+      {/* Frequently Asked Questions Section Component */}
+      <Faq />
 
       {/* Website Footer */}
       <Footer />

@@ -43,7 +43,7 @@ const data = {
   platform: [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/dashboard",
       icon: <IconDashboard />,
     },
   ],

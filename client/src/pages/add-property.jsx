@@ -69,7 +69,7 @@ export default function AddPropertyPage() {
     country: "",
     lat: "",
     lng: "",
-    agent: "",
+    agent: [],
     owner: "",
     isFeatured: false,
     isHot: false,
@@ -370,7 +370,13 @@ export default function AddPropertyPage() {
           const p = propertyRes.data
           setFormData({
             ...p,
-            agent: p.agent?._id || p.agent || "",
+            agent: p.agent
+              ? (Array.isArray(p.agent)
+                  ? p.agent
+                  : typeof p.agent === "string" && p.agent.startsWith("[") && p.agent.endsWith("]")
+                  ? JSON.parse(p.agent)
+                  : p.agent.split(",").map((s) => s.trim()).filter(Boolean))
+              : [],
             owner: p.owner?._id || p.owner || "",
             images: p.images || [],
             lat: p.lat !== undefined && p.lat !== null ? p.lat.toString() : "",
@@ -487,14 +493,21 @@ export default function AddPropertyPage() {
       return
     }
 
-    if (!formData.agent) {
-      toast.error("Please assign an agent before saving.")
+    const hasAgent = Array.isArray(formData.agent)
+      ? formData.agent.length > 0
+      : Boolean(formData.agent && formData.agent.toString().trim());
+
+    if (!hasAgent) {
+      toast.error("Please assign at least one agent before saving.")
       return
     }
 
     if (loading) return
 
     const cleanedPayload = { ...formData };
+    cleanedPayload.agent = Array.isArray(cleanedPayload.agent)
+      ? cleanedPayload.agent.join(",")
+      : (cleanedPayload.agent || null);
     if (!showBedrooms) {
       cleanedPayload.bedrooms = null;
     } else if (cleanedPayload.bedrooms !== "" && cleanedPayload.bedrooms !== null) {
@@ -936,6 +949,7 @@ export default function AddPropertyPage() {
                     Assign Agent <span className="text-destructive">*</span>
                   </Label>
                   <SearchableSelect
+                    multiple
                     value={formData.agent}
                     onValueChange={(val) => handleSelectChange("agent", val)}
                     items={agents.map((agent) => ({

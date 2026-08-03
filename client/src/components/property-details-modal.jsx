@@ -58,7 +58,12 @@ export function PropertyDetailsModal({ property, open, onOpenChange }) {
 
   if (!property) return null
 
-  const assignedAgent = agents.find(a => a._id === property.agent)
+  const agentIds = Array.isArray(property.agent)
+    ? property.agent
+    : typeof property.agent === 'string' && property.agent
+      ? property.agent.split(',').map(s => s.trim()).filter(Boolean)
+      : []
+  const assignedAgents = agents.filter(a => agentIds.includes(a._id) || a._id === property.agent)
   const assignedOwner = owners.find(o => o._id === property.owner)
   const images = property.images && property.images.length > 0 
     ? property.images 
@@ -266,34 +271,38 @@ export function PropertyDetailsModal({ property, open, onOpenChange }) {
               
               {/* Agent card */}
               <div className="space-y-3">
-                <span className="text-[10px] uppercase font-extrabold tracking-widest text-muted-foreground">Assigned Agent</span>
-                {assignedAgent ? (
-                  <div className="bg-card border border-border/50 rounded-2xl p-3.5 space-y-2.5 shadow-sm">
-                    <div className="flex items-center gap-3">
-                      <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm uppercase">
-                        {assignedAgent.name?.substring(0, 2)}
+                <span className="text-[10px] uppercase font-extrabold tracking-widest text-muted-foreground">
+                  {assignedAgents.length > 1 ? "Assigned Agents" : "Assigned Agent"}
+                </span>
+                {assignedAgents.length > 0 ? (
+                  assignedAgents.map((agentItem) => (
+                    <div key={agentItem._id} className="bg-card border border-border/50 rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+                      <div className="flex items-center gap-3">
+                        <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm uppercase">
+                          {agentItem.name?.substring(0, 2)}
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-sm text-foreground">{agentItem.name}</h4>
+                          <span className="text-[10px] text-muted-foreground uppercase font-mono">{agentItem.uniqueId || "Agent"}</span>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-bold text-sm text-foreground">{assignedAgent.name}</h4>
-                        <span className="text-[10px] text-muted-foreground uppercase font-mono">{assignedAgent.uniqueId || "Agent"}</span>
+                      <Separator className="bg-border/40" />
+                      <div className="space-y-1.5 text-xs text-muted-foreground">
+                        {agentItem.phone && (
+                          <div className="flex items-center gap-2">
+                            <IconPhone className="size-3.5 text-primary" />
+                            <span>{agentItem.phone}</span>
+                          </div>
+                        )}
+                        {agentItem.email && (
+                          <div className="flex items-center gap-2">
+                            <IconMail className="size-3.5 text-primary font-bold" />
+                            <span className="truncate">{agentItem.email}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <Separator className="bg-border/40" />
-                    <div className="space-y-1.5 text-xs text-muted-foreground">
-                      {assignedAgent.phone && (
-                        <div className="flex items-center gap-2">
-                          <IconPhone className="size-3.5 text-primary" />
-                          <span>{assignedAgent.phone}</span>
-                        </div>
-                      )}
-                      {assignedAgent.email && (
-                        <div className="flex items-center gap-2">
-                          <IconMail className="size-3.5 text-primary font-bold" />
-                          <span className="truncate">{assignedAgent.email}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  ))
                 ) : (
                   <div className="text-xs text-muted-foreground italic p-3 border border-dashed rounded-xl bg-card">
                     No active agent assigned
